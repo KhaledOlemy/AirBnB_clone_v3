@@ -77,7 +77,7 @@ class DBStorage:
 
     def get(self, cls, id):
         """returns an instance of a class"""
-        instances = self.all(cls)
+        instances = self.all(str(cls))
         desired_instance = None
         for _, instance in instances.items():
             if instance.id == id:
@@ -87,4 +87,4 @@ class DBStorage:
 
     def count(self, cls=None):
         """counts the number of objects in storage"""
-        return len(list(self.all(cls).keys()))
+        return len(list(self.all(str(cls)).keys()))
