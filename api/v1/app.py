@@ -11,6 +11,7 @@ api_port = getenv("HBNB_API_PORT", "5000")
 
 app.register_blueprint(app_views)
 
+
 @app.teardown_appcontext
 def tear_down(exc):
     storage.close()
