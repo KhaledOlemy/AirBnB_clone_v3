@@ -12,10 +12,12 @@ from models.place import Place
 from models.review import Review
 from models import storage
 
+
 @app_views.route("/status")
 def status_function():
     """simple status json to return"""
     return jsonify({"status": "OK"})
+
 
 @app_views.route("/stats")
 def stats_function():
