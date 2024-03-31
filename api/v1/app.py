@@ -20,6 +20,7 @@ def tear_down(exc):
     """teardown the application"""
     storage.close()
 
+
 @app.errorhandler(404)
 def not_fount(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
