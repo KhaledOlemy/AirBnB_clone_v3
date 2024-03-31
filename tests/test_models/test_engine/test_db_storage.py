@@ -105,5 +105,5 @@ class TestFileStorage(unittest.TestCase):
     def test_count_all(self):
         """Test that count returns int for all"""
         storage = DBStorage()
-        instance = storage.count(None)
+        instance = storage.count(Place)
         self.assertTrue(type(instance), int)
