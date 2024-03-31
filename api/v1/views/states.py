@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+"""State class functions get/post/put/delete"""
 from models.state import State
 from models import storage
 from flask import jsonify, make_response, request, abort
@@ -6,7 +8,7 @@ from api.v1.views import app_views
 
 @app_views.route("/states", methods=["GET", "POST"], strict_slashes=False)
 def get_all_states():
-    """return all states"""
+    """return all states for GET and creates new state on POST"""
     if request.method == "GET":
         all_instances = [state.to_dict() for state in
                          storage.all(State).values()]
@@ -25,7 +27,10 @@ def get_all_states():
 @app_views.route("/states/<state_id>", methods=["GET", "DELETE", "PUT"],
                  strict_slashes=False)
 def get_single_state(state_id):
-    """return a single state"""
+    """return a single state on GET
+       deletes a single state on DELETE
+       updates a single state on PUT
+    """
     state = storage.get(State, state_id)
     if not state:
         abort(404)
