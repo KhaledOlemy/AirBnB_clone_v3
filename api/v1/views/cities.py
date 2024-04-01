@@ -21,9 +21,9 @@ def get_all_cities(state_id):
                          city.state_id == state_id]
         return jsonify(all_instances)
     elif request.method == "POST":
-        if not request.get_json():
+        if not request.get_json(force=True, silent=True):
             abort(400, description="Not a JSON")
-        data = request.get_json()
+        data = request.get_json(force=True, silent=True)
         if 'name' not in data:
             abort(400, description="Missing name")
         data['state_id'] = state_id
@@ -49,9 +49,9 @@ def get_single_city(city_id):
         storage.save()
         return make_response(jsonify({}), 200)
     elif request.method == "PUT":
-        if not request.get_json():
+        if not request.get_json(force=True, silent=True):
             abort(400, description="Not a JSON")
-        data = request.get_json()
+        data = request.get_json(force=True, silent=True)
         for key, value in data.items():
             if key not in ["id", "created_at", "updated_at"]:
                 setattr(city, key, value)
