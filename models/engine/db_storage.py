@@ -77,7 +77,9 @@ class DBStorage:
 
     def get(self, cls, id):
         """returns an instance of a class"""
-        instances = self.all(cls)
+        if not cls or not id:
+            return None
+        instances = models.storage.all(cls)
         desired_instance = None
         for _, instance in instances.items():
             if instance.id == id:
