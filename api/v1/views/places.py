@@ -7,6 +7,7 @@ from models.user import User
 from models import storage
 from flask import jsonify, make_response, request, abort
 from api.v1.views import app_views
+import os
 
 
 @app_views.route("/cities/<city_id>/places", methods=["GET", "POST"],
@@ -106,8 +107,17 @@ def search_places():
     # look here
     if not amenities:
         return jsonify([place.to_dict() for place in places])
+    if os.getenv("HBNB_TYPE_STORAGE") == "db":
+        desired_amenities = [storage.get(Amenity, amenity_id) for amenity_id in amenities]
+
+        desired_places = [place for place in places if all([amenity in place.amenities for amenity in desired_amenities])]
+        return jsonify([place.to_dict() for place in desired_places])
     else:
-        return jsonify([place.to_dict() for place in places])
+        qualified_places = []
+        for place in places:
+            if all([a for a in amenities if a in place.amenity_ids]):
+                qualified_places.append(place)
+        return jsonify([place.to_dict() for place in qualified_places])
 
 
 # @app_views.route("/places_search", methods=["POST"],
