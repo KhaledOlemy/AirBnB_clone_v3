@@ -17,8 +17,10 @@ def get_all_users():
         if not request.get_json(force=True, silent=True):
             abort(400, description="Not a JSON")
         data = request.get_json(force=True, silent=True)
-        if 'name' not in data:
-            abort(400, description="Missing name")
+        if 'email' not in data:
+            abort(400, description="Missing email")
+        if 'password' not in data:
+            abort(400, description="Missing password")
         new_instance = User(**data)
         new_instance.save()
         return make_response(jsonify(new_instance.to_dict()), 201)
@@ -45,7 +47,7 @@ def get_single_user(user_id):
             abort(400, description="Not a JSON")
         data = request.get_json(force=True, silent=True)
         for key, value in data.items():
-            if key not in ["id", "created_at", "updated_at"]:
+            if key not in ["id", "email", "created_at", "updated_at"]:
                 setattr(user, key, value)
         storage.save()
         return make_response(jsonify(user.to_dict()), 200)
