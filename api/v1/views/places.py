@@ -105,7 +105,7 @@ def search_places():
         places = all_places
     # look here
     if not amenities:
-        return jsonify([place.to_dict() for place in places])
+        return jsonify(None)
     else:
         return jsonify([place.to_dict() for place in places])
 
