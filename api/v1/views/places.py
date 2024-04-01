@@ -2,6 +2,7 @@
 """Place class functions get/post/put/delete"""
 from models.place import Place
 from models.city import City
+from models.amenity import Amenity
 from models.user import User
 from models import storage
 from flask import jsonify, make_response, request, abort
@@ -65,3 +66,44 @@ def get_single_place(place_id):
                 setattr(place, key, value)
         storage.save()
         return make_response(jsonify(place.to_dict()), 200)
+
+
+@app_views.route("/places_search", methods=["POST"],
+                 strict_slashes=False)
+def search_places():
+    """return a single place on GET
+       deletes a single place on DELETE
+       updates a single place on PUT
+    """
+    all_places = storage.all(Place).values()
+    if not request.get_json(force=True, silent=True):
+        abort(400, description="Not a JSON")
+    data = request.get_json(force=True, silent=True)
+    if not data:
+        return jsonify([place.to_dict() for place in all_places])
+    cities = []
+    for item in data.get("states", []):
+        cities += [city.id for city in storage.all(City).values() if
+                   city.state_id == item]
+    for city in data.get("cities", []):
+        if city not in cities:
+            cities.append(city)
+    places = None
+    for item in cities:
+        places = [place for place in all_places if place.city_id == item
+                  and place not in cities]
+    if not places:
+        places = all_places
+    if not data.get('amenities'):
+        return jsonify([place.to_dict() for place in places])
+    desired_places = []
+    desired_amenities = [storage.get(Amenity, amenity_id) for amenity_id
+                         in data.get('amenities')]
+    for item in places:
+        qualified = []
+        for amenity in desired_amenities:
+            if amenity in item.amenities:
+                qualified.append(1)
+        if len(qualified) == len(desired_amenities):
+            desired_places.append(item)
+    return jsonify(desired_places)
