@@ -87,21 +87,21 @@ class TestFileStorage(unittest.TestCase):
     def test_save(self):
         """Test that save properly saves objects to file.json"""
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing file storage")
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_get_class_id(self):
         """Test that get returns the FileStorage.__objects attr"""
         storage = DBStorage()
         instance = storage.get(User, None)
         self.assertTrue(type(instance), dict)
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing file storage")
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count_class(self):
         """Test that count returns int for class"""
         storage = DBStorage()
         instance = storage.count(User)
         self.assertTrue(type(instance), int)
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing file storage")
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count_all(self):
         """Test that count returns int for all"""
         storage = DBStorage()
