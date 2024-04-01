@@ -7,15 +7,18 @@ from flask import jsonify, make_response, request, abort
 from api.v1.views import app_views
 
 
-@app_views.route("/states/<state_id>/cities", methods=["GET", "POST"], strict_slashes=False)
+@app_views.route("/states/<state_id>/cities", methods=["GET", "POST"],
+                 strict_slashes=False)
 def get_all_cities(state_id):
     """return all cities for GET and creates new city on POST"""
-    linked_state = [state for state in storage.all(State).values() if state.id == state_id]
+    linked_state = [state for state in
+                    storage.all(State).values() if state.id == state_id]
     if not linked_state:
         abort(404)
     if request.method == "GET":
         all_instances = [city.to_dict() for city in
-                         storage.all(City).values() if city.state_id == state_id]
+                         storage.all(City).values() if
+                         city.state_id == state_id]
         return jsonify(all_instances)
     elif request.method == "POST":
         if not request.get_json():
