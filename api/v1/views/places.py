@@ -93,7 +93,7 @@ def search_places():
         places += [place for place in all_places if place.city_id == item
                   and place not in cities]
     if not places:
-        places = []
+        places = all_places
     if not data.get('amenities'):
         return jsonify([place.to_dict() for place in places])
     desired_places = []
@@ -102,7 +102,7 @@ def search_places():
     for item in places:
         qualified = []
         for amenity in desired_amenities:
-            if amenity in item.amenities:
+            if amenity.name in item.amenities:
                 qualified.append(1)
         if len(qualified) == len(desired_amenities):
             desired_places.append(item)
