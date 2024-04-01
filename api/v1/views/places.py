@@ -88,9 +88,9 @@ def search_places():
     for city in data.get("cities", []):
         if city not in cities:
             cities.append(city)
-    places = None
+    places = []
     for item in cities:
-        places = [place for place in all_places if place.city_id == item
+        places += [place for place in all_places if place.city_id == item
                   and place not in cities]
     if not places:
         places = all_places
