@@ -108,10 +108,14 @@ def search_places():
     if not amenities:
         return jsonify([place.to_dict() for place in places])
     if os.getenv("HBNB_TYPE_STORAGE") == "db":
-        desired_amenities = [storage.get(Amenity, amenity_id) for amenity_id in amenities]
-
-        desired_places = [place for place in places if all([amenity in place.amenities for amenity in desired_amenities])]
-        return jsonify([place.to_dict() for place in desired_places])
+        amenities_as_objects = [storage.get(Amenity, a_id) for a_id in amenities]
+        places = [place for place in places if all([amenity in place.amenities for amenity in amenities_as_objects])]
+        qualified_places = []
+        for place in places:
+            place_dict = place.to_dict()
+            place_dict.pop('amenities', None)
+            places.append(place_dict)
+        return jsonify(places)
     else:
         qualified_places = []
         for place in places:
