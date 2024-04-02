@@ -130,7 +130,7 @@ class TestDBStorage2(unittest.TestCase):
         models.storage.new(state4)
         models.storage.save()
         models.storage.close()
-        dummy_state = list(models.storage.all().values())[0]
+        dummy_state = list(models.storage.all().values())[-1]
         dummy_state_id = dummy_state.id
         get = models.storage.get(State, dummy_state_id)
         self.assertEqual(get.id, dummy_state_id)
