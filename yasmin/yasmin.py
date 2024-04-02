@@ -1,2 +1,3 @@
 #!/usr/bin/python3
-""" main docum
+""" main docum """
+a = 10
