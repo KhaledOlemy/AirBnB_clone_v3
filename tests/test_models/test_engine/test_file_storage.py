@@ -133,6 +133,7 @@ class TestDBStorage2(unittest.TestCase):
         dummy_state = list(models.storage.all().values())[-1]
         dummy_state_id = dummy_state.id
         get = models.storage.get(State, dummy_state_id)
+        self.assertNotEqual(get.id, dummy_state_id)
         models.storage.delete(get)
         models.storage.save()
         models.storage.close()
