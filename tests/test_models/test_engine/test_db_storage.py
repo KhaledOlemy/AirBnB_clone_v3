@@ -87,23 +87,62 @@ class TestFileStorage(unittest.TestCase):
     def test_save(self):
         """Test that save properly saves objects to file.json"""
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing file storage")
-    def test_get_class_id(self):
-        """Test that get returns the FileStorage.__objects attr"""
-        storage = DBStorage()
-        instance = storage.get(User, "id")
-        self.assertTrue(type(instance), None)
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing file storage")
-    def test_count_class(self):
-        """Test that count returns int for class"""
-        storage = DBStorage()
-        instance = storage.count(User)
-        self.assertTrue(type(instance), int)
+@unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+class TestDBStorage2(unittest.TestCase):
+    """test doc doc"""
+    def test_get(self):
+        """test doc doc"""
+        state1 = State(name="dummyState1")
+        state2 = State(name="dummyState2")
+        state3 = State(name="dummyState3")
+        state4 = State(name="dummyState4")
+        models.storage.new(state1)
+        models.storage.new(state2)
+        models.storage.new(state3)
+        models.storage.new(state4)
+        models.storage.save()
+        models.storage.close()
+        dummy_state = list(models.storage.all().values())[0]
+        dummy_state_id = dummy_state.id
+        get = models.storage.get(State, dummy_state_id)
+        self.assertEqual(get.id, dummy_state_id)
+        models.storage.delete(get)
+        models.storage.save()
+        models.storage.close()
+        get = models.storage.get(State, dummy_state_id)
+        self.assertEqual(get, None)
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing file storage")
-    def test_count_all(self):
-        """Test that count returns int for all"""
-        storage = DBStorage()
-        instance = storage.count(None)
-        self.assertTrue(type(instance), int)
+
+@unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+class TestDBStorage3(unittest.TestCase):
+    """test doc doc"""
+    def test_count(self):
+        """test doc doc"""
+        state1 = State(name="dummyState1")
+        state2 = State(name="dummyState2")
+        state3 = State(name="dummyState3")
+        state4 = State(name="dummyState4")
+        city1 = State(name="dummyCity1", state_id=state1.id)
+        city2 = State(name="dummyCity2", state_id=state2.id)
+        city3 = State(name="dummyCity3", state_id=state3.id)
+        city4 = State(name="dummyCity4", state_id=state4.id)
+        models.storage.new(state1)
+        models.storage.new(state2)
+        models.storage.new(state3)
+        models.storage.new(state4)
+        models.storage.new(city1)
+        models.storage.new(city2)
+        models.storage.new(city3)
+        models.storage.new(city4)
+        models.storage.save()
+        models.storage.close()
+        total_count = len(models.storage.all())
+        total_count_cp = models.storage.count()
+        total_count_state = len(models.storage.all(State))
+        total_count_state_cp = models.storage.count(State)
+        total_count_city = len(models.storage.all(City))
+        total_count_city_cp = models.storage.count(City)
+        self.assertEqual(total_count, total_count_cp)
+        self.assertEqual(total_count_state, total_count_state_cp)
+        self.assertEqual(total_count_city, total_count_city_cp)
