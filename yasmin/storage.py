@@ -1,3 +1,4 @@
 #!/usr/bin/python3
-""" main doc
+""" main doc """
+a=3
 
